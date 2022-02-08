@@ -111,9 +111,7 @@ const App = () => {
         {/* <Image source={{ uri: currentMarker.image }} style={styles.thumbnail} /> */}
         <Image
           style={styles.thumbnail}
-          source={{
-            uri: 'https://www.industrialempathy.com/img/remote/ZiClJf-1920w.jpg',
-          }}
+          source={{uri: currentMarker.image}}
         />
         <Text> {currentMarker.name} </Text>
         <Text> {currentMarker.address} </Text>
