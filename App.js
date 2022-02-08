@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, StyleSheet, TextInput, Text, ScrollView } from 'react-native';
+import { View, StyleSheet, TextInput, Text, ScrollView, Image } from 'react-native';
 import Constants from 'expo-constants';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import MapView, { Marker } from 'react-native-maps';
@@ -11,6 +11,7 @@ const GOOGLE_PLACES_API_KEY = 'AIzaSyDrIC6rsoT9UnzH8N-3ZJJvEsyBAvxGle8';
 const App = () => {
   const [regionCoords, setRegion] = useState({ lat: 37.78825, lng: -122.4324 });
   const [marker, setMarker] = useState({ lat: 37.78825, lng: -122.4324 });
+  const [currentMarker, setCurrentMarker] = useState({});
   const refRBSheet = useRef();
 
   const onPress = (data, details) => {
@@ -26,10 +27,11 @@ const App = () => {
     );
     setNearbyPOI(response.data);
   };
-
-  const _OnClick = () => (
+  console.log(nearbyPOI);
+  const _OnClick = (marker) => {
+    setCurrentMarker(marker);
     refRBSheet.current.open()
-  )
+  }
   return (
     <View style={styles.container}>
       <MapView
@@ -46,7 +48,7 @@ const App = () => {
             key={key}
             coordinate={{ latitude: marker.location.coordinates[0], longitude: marker.location.coordinates[1] }}
             title={marker.name}
-            onPress={() => _OnClick()}
+            onPress={() => _OnClick(marker)}
           />
         ))}
       </MapView>
@@ -101,9 +103,23 @@ const App = () => {
             backgroundColor: "#000"
           }
         }}
-        height={600}
+        height={550}
       >
-        <Text>Text</Text>
+        {
+          console.log(currentMarker.image)
+        }
+        {/* <Image source={{ uri: currentMarker.image }} style={styles.thumbnail} /> */}
+        <Image
+          style={styles.thumbnail}
+          source={{
+            uri: 'https://www.industrialempathy.com/img/remote/ZiClJf-1920w.jpg',
+          }}
+        />
+        <Text> {currentMarker.name} </Text>
+        <Text> {currentMarker.address} </Text>
+        <Text> {currentMarker.type} </Text>
+        <Text>{currentMarker.rating} </Text>
+        {/* <Text> {currentMarker?.price.currency} {currentMarker?.price.minprice} - {currentMarker?.price.maxprice} </Text> */}
       </RBSheet>
 
     </View>
@@ -123,6 +139,12 @@ const styles = StyleSheet.create({
     top: 0,
     bottom: 0,
     position: 'absolute',
+  },
+  thumbnail: {
+    // flex: 1,
+    width: '100%',
+    height: 300,
+    resizeMode: 'cover'
   },
 });
 
