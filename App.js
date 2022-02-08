@@ -1,27 +1,103 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, SafeAreaView, Image, TextInput } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
-import React from "react";
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, TextInput, Dimensions } from 'react-native';
+import Constants from 'expo-constants';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
-import MainMap from './MainMap';
-import Markers from './Markers';
+import MapView, { Marker } from 'react-native-maps';
+import axios from 'axios';
+const GOOGLE_PLACES_API_KEY = 'AIzaSyDrIC6rsoT9UnzH8N-3ZJJvEsyBAvxGle8';
 
+const App = () => {
+  const [regionCoords, setRegion] = useState({ lat: 37.78825, lng: -122.4324 });
+  const [marker, setMarker] = useState({ lat: 37.78825, lng: -122.4324 });
 
-export default function App() {
+  const onPress = (data, details) => {
+    fetchAllNearbyPOI(details.geometry.location.lat,details.geometry.location.lng);
+    setRegion(details.geometry.location);
+    setMarker(details.geometry.location);
+  };
+  const [nearbyPOI, setNearbyPOI] = useState([]);
+
+  const fetchAllNearbyPOI = async (lat, lng) => {
+    const response = await axios.get(
+      `http://placesapi-env-1.eba-g2hb9s5e.us-east-1.elasticbeanstalk.com/api/places/getAllNearByPOI?lat=${lat}&long=${lng}`
+    );
+    setNearbyPOI(response.data);
+  };
+
   return (
     <View style={styles.container}>
-      <MainMap>
-        <Markers/>
-        </MainMap>
+      <MapView
+        style={styles.map}
+        region={{
+          latitude: regionCoords.lat,
+          longitude: regionCoords.lng,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        }}>
+        {nearbyPOI?.data?.map(marker => (
+          
+        <MapView.Marker 
+          coordinate={{ latitude: marker.location.coordinates[0], longitude: marker.location.coordinates[1]}}
+          title={marker.name}
+        />
+        ))}
+      </MapView>
+
+      <GooglePlacesAutocomplete
+        styles={{
+          textInputContainer: {
+              width: "90%",
+              top: 30,
+              alignSelf: 'center'
+          },
+          textInput: {
+              borderColor: '#1faadb',
+              borderWidth: 1,
+              borderRadius: 5,
+              height: 48,
+              paddingBottom: 8,
+              color: '#000000',
+              fontSize: 16,
+          },
+          predefinedPlacesDescription: {
+              color: '#1faadb',
+          },
+        }}
+        placeholder="Search"
+        query={{
+          key: GOOGLE_PLACES_API_KEY,
+          language: 'en', // language of the results
+        }}
+        GooglePlacesDetailsQuery={{
+          fields: 'geometry',
+        }}
+        fetchDetails={true}
+        onPress={onPress}
+        onFail={(error) => console.error(error)}
+        requestUrl={{
+          url:
+            'https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api',
+          useOnPlatform: 'web',
+        }} // this in only required for use on the web. See https://git.io/JflFv more for details.
+      />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
-    alignItems: 'center',
     justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F5FCFF',
+  },
+  map: {
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    position: 'absolute',
   },
 });
+
+export default App;
