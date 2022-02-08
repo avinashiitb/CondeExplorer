@@ -5,6 +5,10 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 import MapView, { Marker } from 'react-native-maps';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import axios from 'axios';
+import { List, Divider, Badge } from 'react-native-paper';
+import { Fontisto } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
 
 const GOOGLE_PLACES_API_KEY = 'AIzaSyDrIC6rsoT9UnzH8N-3ZJJvEsyBAvxGle8';
 
@@ -32,6 +36,23 @@ const App = () => {
     setCurrentMarker(marker);
     refRBSheet.current.open()
   }
+
+  const ratingStar = [];
+  let ratingValue = currentMarker.rating;
+  // if(rating && Object.keys(rating).length ){
+  //    ratingValue = details.rating.rating;
+  //    count = details.rating.count;
+  // }
+  for (let i = 0; i < 5; i++) {
+    if (ratingValue - i >= 1) {
+      ratingStar.push(<FontAwesome key={i} name="star" size={17} color={'#d4af37'} />);
+    } else if (ratingValue - i < 1 && ratingValue - i > 0) {
+      ratingStar.push(<FontAwesome name="star-half" size={17} color={'re#d4af37'} />);
+    } else {
+      ratingStar.push(<FontAwesome name="star-o" size={17} color={'#d4af37'} />);
+    }
+
+  }
   return (
     <View style={styles.container}>
       <MapView
@@ -49,7 +70,15 @@ const App = () => {
             coordinate={{ latitude: marker.location.coordinates[0], longitude: marker.location.coordinates[1] }}
             title={marker.name}
             onPress={() => _OnClick(marker)}
-          />
+            // icon={require('./restaurant.webp')}
+          >
+            {
+              marker.category == "Restaurant" ? <Image source={require('./restaurant.webp')} style={{height: 40, width:35 }} />
+              : marker.category == "Hotel" ? <Image source={require('./hotel.png')} style={{height: 40, width:35 }} />
+                : <Image source={require('./store.png')} style={{height: 50, width: 40 }} />
+            }
+            {/* <Image source={require('./restaurant.webp')} style={{height: 50, width:50 }} /> */}
+          </MapView.Marker>
         ))}
       </MapView>
 
@@ -97,7 +126,8 @@ const App = () => {
         closeOnPressMask={false}
         customStyles={{
           wrapper: {
-            backgroundColor: "transparent"
+            backgroundColor: "transparent",
+            elevation: 15
           },
           draggableIcon: {
             backgroundColor: "#000"
@@ -112,13 +142,23 @@ const App = () => {
         <Image
           style={styles.thumbnail}
           source={{
-            uri: 'https://www.industrialempathy.com/img/remote/ZiClJf-1920w.jpg',
+            uri: currentMarker.image
           }}
         />
-        <Text> {currentMarker.name} </Text>
-        <Text> {currentMarker.address} </Text>
-        <Text> {currentMarker.type} </Text>
-        <Text>{currentMarker.rating} </Text>
+        <List.Item
+          title={currentMarker.name}
+          description={currentMarker.type}
+          left={props => <List.Icon {...props} icon={() => <Fontisto name="hotel" size={24} color="black" />} />}
+        />
+        <Text style={{ paddingLeft: 10, paddingBottom: 10 }}> Rating: <Text style={{ paddingLeft: 40 }} >{currentMarker.rating} {ratingStar}</Text> </Text>
+        <Divider />
+        <View style={{ flexDirection: 'row', paddingTop: 10, paddingBottom: 10, paddingLeft: 10, paddingRight: 10 }}>
+          <Badge style={{ marginRight: 10 }}>AD</Badge>
+          <Badge style={{ marginRight: 10 }}>50 % OFF</Badge>
+          <Badge style={{ marginRight: 10 }}>Below $500</Badge>
+        </View>
+        <Divider />
+        <Text style={{ paddingTop: 10, paddingBottom: 10, paddingRight: 10, paddingLeft: 5 }}> <Entypo name="location-pin" size={24} color="black" /> {currentMarker.address} </Text>
         {/* <Text> {currentMarker?.price.currency} {currentMarker?.price.minprice} - {currentMarker?.price.maxprice} </Text> */}
       </RBSheet>
 
