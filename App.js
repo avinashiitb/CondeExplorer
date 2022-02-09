@@ -161,7 +161,12 @@ const App = () => {
           <Badge style={{ marginRight: 10 }}>Below $500</Badge>
         </View>
         <Divider />
-        <Text style={{ paddingTop: 10, paddingBottom: 10, paddingRight: 10, paddingLeft: 5 }}> <Entypo name="location-pin" size={24} color="black" /> {currentMarker.address} </Text>
+        <List.Item
+          title={currentMarker.address}
+          left={props => <List.Icon style={{marginLeft: -10, marginRight: -10}} icon={() => <Entypo name="location-pin" size={24} color="black" />
+          } />}
+        />
+        {/* <Text style={{ paddingTop: 10, paddingBottom: 10, paddingRight: 10, paddingLeft: 5 }}> <Entypo name="location-pin" size={24} color="black" /> {currentMarker.address} </Text> */}
         {/* <Text> {currentMarker?.price.currency} {currentMarker?.price.minprice} - {currentMarker?.price.maxprice} </Text> */}
       </RBSheet>
 
