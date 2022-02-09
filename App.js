@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, StyleSheet, TextInput, Text, ScrollView, Image } from 'react-native';
+import { View, StyleSheet, TextInput, Text, ScrollView, Image, Linking } from 'react-native';
 import Constants from 'expo-constants';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import MapView, { Marker } from 'react-native-maps';
@@ -16,6 +16,11 @@ const App = () => {
   const [marker, setMarker] = useState({ lat: 37.78825, lng: -122.4324 });
   const [currentMarker, setCurrentMarker] = useState({});
   const refRBSheet = useRef();
+  const contactInfo = {
+    fbLink :"https://www.facebook.com/ritzcarltonnycentralpark/",
+    phone:"+1 212-308-9100",
+    website:"https://www.ritzcarlton.com/en/hotels/new-york/central-park"
+  }
 
   const onPress = (data, details) => {
     fetchAllNearbyPOI(details.geometry.location.lat, details.geometry.location.lng);
@@ -65,7 +70,7 @@ const App = () => {
         {nearbyPOI?.data?.map((marker, key) => (
 
           <MapView.Marker
-            key={key}
+            key={marker._id}
             coordinate={{ latitude: marker.location.coordinates[0], longitude: marker.location.coordinates[1] }}
             title={marker.name}
             onPress={() => _OnClick(marker)}
@@ -156,9 +161,9 @@ const App = () => {
         <Text style={{ paddingLeft: 70, paddingBottom: 10 }}><Text style={{ paddingLeft: 40 }} >{currentMarker.rating} {ratingStar}</Text> </Text>
         <Divider />
         <View style={{flexDirection: 'row', paddingTop:10, paddingBottom:10}}>
-          <Button style={{paddingLeft: 10}} icon={() => <Entypo name="facebook-with-circle" size={30} color="black" />} mode="text" onPress={() => console.log('Pressed')} />
-          <Button style={{paddingLeft: 10}} icon={() => <Entypo name="twitter-with-circle" size={30} color="black" />} mode="text" onPress={() => console.log('Pressed')} />
-          <Button style={{paddingLeft: 10}} icon={() => <FontAwesome name="whatsapp" size={30} color="black" />} mode="text" onPress={() => console.log('Pressed')} />
+          <Button style={{paddingLeft: 10}} icon={() => <Entypo name="facebook-with-circle" size={30} color="black" />} mode="text" onPress={() => Linking.openURL(contactInfo.fbLink)} />
+          <Button style={{paddingLeft: 10}} icon={() => <Entypo name="network" size={30} color="black" />} mode="text" onPress={() => Linking.openURL(contactInfo.website)} />
+          <Button style={{paddingLeft: 10}} icon={() => <FontAwesome name="phone" size={30} color="black" />} mode="text" onPress={() => Linking.openURL(`tel:${contactInfo.phone}`)} />
           <Button style={{paddingLeft: 10}} icon={() => <FontAwesome name="share-alt-square" size={30} color="black" />} mode="text" onPress={() => console.log('Pressed')} />
           <Button style={{paddingLeft: 10}} icon={() => <FontAwesome name="bookmark-o" size={24} color="black" />} mode="text" onPress={() => console.log('Pressed')} />
           {/* <Entypo name="facebook-with-circle" size={24} color="black" /> */}
