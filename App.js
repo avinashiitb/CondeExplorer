@@ -6,9 +6,8 @@ import MapView, { Marker } from 'react-native-maps';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import axios from 'axios';
 import { List, Divider, Badge } from 'react-native-paper';
-import { Fontisto } from '@expo/vector-icons';
-import { FontAwesome } from '@expo/vector-icons';
-import { Entypo } from '@expo/vector-icons';
+import { Fontisto,FontAwesome, Entypo, AntDesign, MaterialIcons } from '@expo/vector-icons';
+
 
 const GOOGLE_PLACES_API_KEY = 'AIzaSyDrIC6rsoT9UnzH8N-3ZJJvEsyBAvxGle8';
 
@@ -148,7 +147,11 @@ const App = () => {
         <List.Item
           title={currentMarker.name}
           description={currentMarker.type}
-          left={props => <List.Icon {...props} icon={() => <Fontisto name="hotel" size={24} color="black" />} />}
+          left={props => <List.Icon {...props} icon={() => 
+            currentMarker.category == "Hotel" ? <Fontisto name="hotel" size={24} color="black" /> :
+            currentMarker.category == "Restaurant" ? <AntDesign name="rest" size={24} color="black" /> :
+            <MaterialIcons name="design-services" size={24} color="black" /> 
+      } />}
         />
         <Text style={{ paddingLeft: 10, paddingBottom: 10 }}> Rating: <Text style={{ paddingLeft: 40 }} >{currentMarker.rating} {ratingStar}</Text> </Text>
         <Divider />
