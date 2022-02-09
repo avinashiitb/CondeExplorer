@@ -5,8 +5,8 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 import MapView, { Marker } from 'react-native-maps';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import axios from 'axios';
-import { List, Divider, Badge } from 'react-native-paper';
-import { Fontisto,FontAwesome, Entypo, AntDesign, MaterialIcons } from '@expo/vector-icons';
+import { List, Divider, Badge, Button } from 'react-native-paper';
+import { Fontisto, FontAwesome, Entypo, AntDesign, MaterialIcons } from '@expo/vector-icons';
 
 
 const GOOGLE_PLACES_API_KEY = 'AIzaSyDrIC6rsoT9UnzH8N-3ZJJvEsyBAvxGle8';
@@ -69,12 +69,12 @@ const App = () => {
             coordinate={{ latitude: marker.location.coordinates[0], longitude: marker.location.coordinates[1] }}
             title={marker.name}
             onPress={() => _OnClick(marker)}
-            // icon={require('./restaurant.webp')}
+          // icon={require('./restaurant.webp')}
           >
             {
-              marker.category == "Restaurant" ? <Image source={require('./restaurant.webp')} style={{height: 40, width:35 }} />
-              : marker.category == "Hotel" ? <Image source={require('./hotel.png')} style={{height: 40, width:35 }} />
-                : <Image source={require('./store.png')} style={{height: 50, width: 40 }} />
+              marker.category == "Restaurant" ? <Image source={require('./restaurant.webp')} style={{ height: 40, width: 35 }} />
+                : marker.category == "Hotel" ? <Image source={require('./hotel.png')} style={{ height: 40, width: 35 }} />
+                  : <Image source={require('./store.png')} style={{ height: 50, width: 40 }} />
             }
             {/* <Image source={require('./restaurant.webp')} style={{height: 50, width:50 }} /> */}
           </MapView.Marker>
@@ -132,7 +132,7 @@ const App = () => {
             backgroundColor: "#000"
           }
         }}
-        height={550}
+        height={600}
       >
         {
           console.log(currentMarker.image)
@@ -147,13 +147,22 @@ const App = () => {
         <List.Item
           title={currentMarker.name}
           description={currentMarker.type}
-          left={props => <List.Icon {...props} icon={() => 
+          left={props => <List.Icon {...props} icon={() =>
             currentMarker.category == "Hotel" ? <Fontisto name="hotel" size={24} color="black" /> :
-            currentMarker.category == "Restaurant" ? <AntDesign name="rest" size={24} color="black" /> :
-            <MaterialIcons name="design-services" size={24} color="black" /> 
-      } />}
+              currentMarker.category == "Restaurant" ? <AntDesign name="rest" size={24} color="black" /> :
+                <MaterialIcons name="design-services" size={24} color="black" />
+          } />}
         />
-        <Text style={{ paddingLeft: 10, paddingBottom: 10 }}> Rating: <Text style={{ paddingLeft: 40 }} >{currentMarker.rating} {ratingStar}</Text> </Text>
+        <Text style={{ paddingLeft: 70, paddingBottom: 10 }}><Text style={{ paddingLeft: 40 }} >{currentMarker.rating} {ratingStar}</Text> </Text>
+        <Divider />
+        <View style={{flexDirection: 'row', paddingTop:10, paddingBottom:10}}>
+          <Button style={{paddingLeft: 10}} icon={() => <Entypo name="facebook-with-circle" size={30} color="black" />} mode="text" onPress={() => console.log('Pressed')} />
+          <Button style={{paddingLeft: 10}} icon={() => <Entypo name="twitter-with-circle" size={30} color="black" />} mode="text" onPress={() => console.log('Pressed')} />
+          <Button style={{paddingLeft: 10}} icon={() => <FontAwesome name="whatsapp" size={30} color="black" />} mode="text" onPress={() => console.log('Pressed')} />
+          <Button style={{paddingLeft: 10}} icon={() => <FontAwesome name="share-alt-square" size={30} color="black" />} mode="text" onPress={() => console.log('Pressed')} />
+          <Button style={{paddingLeft: 10}} icon={() => <FontAwesome name="bookmark-o" size={24} color="black" />} mode="text" onPress={() => console.log('Pressed')} />
+          {/* <Entypo name="facebook-with-circle" size={24} color="black" /> */}
+        </View>
         <Divider />
         <View style={{ flexDirection: 'row', paddingTop: 10, paddingBottom: 10, paddingLeft: 10, paddingRight: 10 }}>
           <Badge style={{ marginRight: 10 }}>AD</Badge>
@@ -163,7 +172,7 @@ const App = () => {
         <Divider />
         <List.Item
           title={currentMarker.address}
-          left={props => <List.Icon style={{marginLeft: -10, marginRight: -10}} icon={() => <Entypo name="location-pin" size={24} color="black" />
+          left={props => <List.Icon style={{ marginLeft: -10, marginRight: -10 }} icon={() => <Entypo name="location-pin" size={24} color="black" />
           } />}
         />
         {/* <Text style={{ paddingTop: 10, paddingBottom: 10, paddingRight: 10, paddingLeft: 5 }}> <Entypo name="location-pin" size={24} color="black" /> {currentMarker.address} </Text> */}
