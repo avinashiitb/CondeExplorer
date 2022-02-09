@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, StyleSheet, TextInput, Text, ScrollView, Image, Linking } from 'react-native';
+import { View, StyleSheet, TextInput, Text, ScrollView, Image, Linking, Share } from 'react-native';
 import Constants from 'expo-constants';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import MapView, { Marker } from 'react-native-maps';
@@ -40,7 +40,20 @@ const App = () => {
     setCurrentMarker(marker);
     refRBSheet.current.open()
   }
-
+const onShare = (data)=>{
+  Share.share({
+    message: `${data.name} | ${data.type} | ${contactInfo.phone}`,
+    url: data.image,
+    title: data.name
+  }, {
+    // Android only:
+    dialogTitle: data.name,
+    // iOS only:
+    excludedActivityTypes: [
+      'com.apple.UIKit.activity.PostToTwitter'
+    ]
+  })
+}
   const ratingStar = [];
   let ratingValue = currentMarker.rating;
   // if(rating && Object.keys(rating).length ){
@@ -51,7 +64,7 @@ const App = () => {
     if (ratingValue - i >= 1) {
       ratingStar.push(<FontAwesome key={i} name="star" size={17} color={'#d4af37'} />);
     } else if (ratingValue - i < 1 && ratingValue - i > 0) {
-      ratingStar.push(<FontAwesome name="star-half" size={17} color={'re#d4af37'} />);
+      ratingStar.push(<FontAwesome name="star-half" size={17} color={'#d4af37'} />);
     } else {
       ratingStar.push(<FontAwesome name="star-o" size={17} color={'#d4af37'} />);
     }
@@ -77,9 +90,11 @@ const App = () => {
           // icon={require('./restaurant.webp')}
           >
             {
-              marker.category == "Restaurant" ? <Image source={require('./restaurant.webp')} style={{ height: 40, width: 35 }} />
-                : marker.category == "Hotel" ? <Image source={require('./hotel.png')} style={{ height: 40, width: 35 }} />
-                  : <Image source={require('./store.png')} style={{ height: 50, width: 40 }} />
+              marker.category == "Restaurant" ? <Image source={require('./assets/CNT-Restaurant.png')} style={{ height: 40, width: 35 }} />
+                : marker.category == "Hotel" ? <Image source={require('./assets/CNT-Hotel.png')} style={{ height: 40, width: 35 }} />
+                  : marker.category == "VogueFashion" ? <Image source={require('./assets/Vogue-Fashion.png')} style={{ height: 50, width: 40 }}/>
+                  : marker.category == "GQShop" ? <Image source={require('./assets/GQ-Store.png')} style={{ height: 50, width: 40 }}/>
+                  : <Image source={require('./assets/AD-Designer.png')} style={{ height: 50, width: 40 }}/>
             }
             {/* <Image source={require('./restaurant.webp')} style={{height: 50, width:50 }} /> */}
           </MapView.Marker>
@@ -164,7 +179,7 @@ const App = () => {
           <Button style={{paddingLeft: 10}} icon={() => <Entypo name="facebook-with-circle" size={30} color="black" />} mode="text" onPress={() => Linking.openURL(contactInfo.fbLink)} />
           <Button style={{paddingLeft: 10}} icon={() => <Entypo name="network" size={30} color="black" />} mode="text" onPress={() => Linking.openURL(contactInfo.website)} />
           <Button style={{paddingLeft: 10}} icon={() => <FontAwesome name="phone" size={30} color="black" />} mode="text" onPress={() => Linking.openURL(`tel:${contactInfo.phone}`)} />
-          <Button style={{paddingLeft: 10}} icon={() => <FontAwesome name="share-alt-square" size={30} color="black" />} mode="text" onPress={() => console.log('Pressed')} />
+          <Button style={{paddingLeft: 10}} icon={() => <FontAwesome name="share-alt-square" size={30} color="black" />} mode="text" onPress={() => onShare(currentMarker)} />
           <Button style={{paddingLeft: 10}} icon={() => <FontAwesome name="bookmark-o" size={24} color="black" />} mode="text" onPress={() => console.log('Pressed')} />
           {/* <Entypo name="facebook-with-circle" size={24} color="black" /> */}
         </View>
