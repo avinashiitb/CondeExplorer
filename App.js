@@ -92,9 +92,9 @@ const onShare = (data)=>{
             {
               marker.category == "Restaurant" ? <Image source={require('./assets/CNT-Restaurant.png')} style={{ height: 40, width: 35 }} />
                 : marker.category == "Hotel" ? <Image source={require('./assets/CNT-Hotel.png')} style={{ height: 40, width: 35 }} />
-                  : marker.category == "VogueFashion" ? <Image source={require('./assets/Vogue-Fashion.png')} style={{ height: 50, width: 40 }}/>
-                  : marker.category == "GQShop" ? <Image source={require('./assets/GQ-Store.png')} style={{ height: 50, width: 40 }}/>
-                  : <Image source={require('./assets/AD-Designer.png')} style={{ height: 50, width: 40 }}/>
+                  : marker.category == "VogueFashion" ? <Image source={require('./assets/Vogue-Fashion.png')} style={{ height: 40, width: 35 }}/>
+                  : marker.category == "GQShop" ? <Image source={require('./assets/GQ-Store.png')} style={{ height: 40, width: 35 }}/>
+                  : <Image source={require('./assets/AD-Designer.png')} style={{ height: 40, width: 35 }}/>
             }
             {/* <Image source={require('./restaurant.webp')} style={{height: 50, width:50 }} /> */}
           </MapView.Marker>
